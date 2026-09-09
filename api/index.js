@@ -1,13 +1,16 @@
+// Dependencies
 const path = require('path');
 const express = require('express');
 const expressApp = express();
 
 
 
+// Guiding express to the prohect root
 expressApp.use(express.static(path.join(__dirname, '..')));
 
 
 
+// Loading and checking API key
 const apiKey = process.env.SPORTRADAR_NHL_API_KEY;
 
 if (!apiKey || apiKey == "") {
@@ -16,6 +19,7 @@ if (!apiKey || apiKey == "") {
 
 
 
+// Main API call through express' get function
 expressApp.get("/api/nhl-rankings", async (apiRequest, apiResult) => {
     try {
         const fetchUrl = "https://api.sportradar.com/nhl/trial/v7/en/seasons/2025/REG/rankings.json";
@@ -33,18 +37,20 @@ expressApp.get("/api/nhl-rankings", async (apiRequest, apiResult) => {
         const responseData = await sportradarResponse.json();
         apiResult.json(responseData);
 
-    } catch (err) {
-        console.error(err);
+    } catch (error) {
+        console.error(error);
         apiResult.status(500).json({ error: 'Failed to fetch NHL rankings' });
     }
 });
 
 
 
+// For testing purposes
 if (require.main === module) {
     expressApp.listen(3000, () => console.log(`Listening on http://localhost:${3000}`));
 }
 
 
 
+// Exporting app to be accessed by frontend
 module.exports = expressApp;
