@@ -15,13 +15,31 @@ async function loadNhlData() {
     parseData(apiData);
 }
 
-// Add function to parse json data, another function to turn the data into an html table of sorts
-// const dataObject = JSON.parse(apiData);
-
 function parseData(apiData) {
     const dataObject = JSON.parse(apiData);
 
     console.log(dataObject);
+
+    flattenData(apiData);
 }
+
+function flattenData(apiData) {
+    const tableRows = [];
+
+    // apiData.JSON
+    // finish flattening into array
+    apiData.conferences.forEach(currentConference => {
+        currentConference.divisions.forEach(currentDivision => {
+            currentDivision.teams.forEach(currentTeam => {
+                tableRows.push({
+                    team: `${currentTeam.market} ${currentTeam.name}`
+                    // Add the rest of the columns
+                });
+            })
+        })
+    })
+}
+
+
 
 document.getElementById("api-test-button").addEventListener("click", loadNhlData);
